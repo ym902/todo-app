@@ -6,6 +6,7 @@ Vue.js、Express.js、PostgreSQLを使用したTODOアプリのリポジトリ�
 - JavaScript
 - Express.js
 - TypeScript
+- Prisma
 - PostgreSQL
 - Docker
 
