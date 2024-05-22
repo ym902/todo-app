@@ -23,10 +23,10 @@ $ cd vue
 
 3. フロントエンド起動コマンド、起動確認
 ```
-$ npm run serve
+$ npm run dev
 ```
 ```
-http://localhost:8080/
+http://localhost:5173/
 ```
 
 4. バックエンドのプロジェクトへ移動
