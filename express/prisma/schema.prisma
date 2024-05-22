@@ -12,3 +12,11 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// Model
+model Todo {
+  id Int @default(autoincrement()) @id
+  task String
+  deadline DateTime
+  status Boolean @default(false)
+}
