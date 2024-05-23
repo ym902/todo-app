@@ -2,6 +2,14 @@
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 import TestComponent from './components/TestComponent.vue'
+import ChildComponent from './components/TestComponent.vue';
+import { ref } from 'vue';
+
+// 子コンポーネントから送られたデータ
+const receiveMessage = ref('');
+const handleMessage = (data) => {
+  receiveMessage.value = data;
+};
 </script>
 
 <template>
@@ -16,6 +24,10 @@ import TestComponent from './components/TestComponent.vue'
   <main>
     <TheWelcome />
     <TestComponent text="propsの練習です。"/>
+    <div>
+      <child-component @message="handleMessage"></child-component>
+      <p>{{ receiveMessage }}</p>
+    </div>
   </main>
 </template>
 
