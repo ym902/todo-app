@@ -5,10 +5,20 @@ import { statuses } from '../const/statuses';
 
 const input = ref("");
 const inputDate = ref("");
+const isErrMsg = ref(false);
 
 // 送信ボタンをクリックしたときの処理
 function onSubmitForm(event) {
   // console.log(input.value);
+
+  // タスク・期限の入力が空だったときのバリデーション
+  if (input.value=="" || inputDate.value=="") {
+    // エラーメッセージ
+    isErrMsg.value = true;
+    // リロードを防ぐ(エラーメッセージをずっと表示しておく)
+    event.preventDefault();
+    return;
+  }
 
   // DBにデータがないときのために空の配列を宣言しておく → pushがエラーになってしまうため
   const items = JSON.parse(localStorage.getItem("items")) || [];
@@ -30,6 +40,7 @@ function onSubmitForm(event) {
 
 <template>
   <div>
+    <p v-if="isErrMsg">タスク・期限を両方入力してください。</p>
     <form @submit="onSubmitForm">
       <label>やること<input type="text" v-model="input" /></label>
       <label>期限<input type="date" v-model="inputDate" /></label>
