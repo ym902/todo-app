@@ -21,7 +21,7 @@ function onEdit(id) {
 // 更新
 let isErrMsg = ref(false);
 
-function onUpdate() {
+function onUpdate(id) {
   // エラーメッセージ
   if (inputContent.value == "" || inputLimit.value == "") {
     isErrMsg.value = true;
