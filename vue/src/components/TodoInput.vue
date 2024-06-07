@@ -12,7 +12,7 @@ function onSubmitForm(event) {
   // console.log(input.value);
 
   // タスク・期限の入力が空だったときのバリデーション
-  if (input.value=="" || inputDate.value=="") {
+  if (input.value == "" || inputDate.value == "") {
     // エラーメッセージ
     isErrMsg.value = true;
     // リロードを防ぐ(エラーメッセージをずっと表示しておく)
@@ -29,7 +29,7 @@ function onSubmitForm(event) {
     content: input.value,
     limit: inputDate.value,
     state: statuses.NOT_START,
-    onEnd: false,
+    onEdit: false,
   };
 
   items.push(newItem);
