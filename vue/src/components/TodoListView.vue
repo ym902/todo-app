@@ -1,10 +1,51 @@
 <!-- Todoリスト一覧表示 -->
 <script setup>
-const items = JSON.parse(localStorage.getItem("items")) || [];
+import { ref } from 'vue';
+import { statuses } from '../const/statuses';
+
+let items = ref(JSON.parse(localStorage.getItem("items")) || []);
+let inputContent = ref();  // タスクの内容
+let inputLimit = ref();  // タスクの期限
+let inputState = ref();  // タスクのステータス
+
+// 編集ボタンをクリックしたときの処理 onEditの値をtrueにする
+function onEdit(id) {
+  inputContent.value = items.value[id].content;
+  inputLimit.value = items.value[id].limit;
+  inputState.value = items.value[id].state;
+  
+  // refで宣言した値にアクセスするために .value が必要
+  items.value[id].onEdit = true;
+};
+
+// 更新
+let isErrMsg = ref(false);
+
+function onUpdate() {
+  // エラーメッセージ
+  if (inputContent.value == "" || inputLimit.value == "") {
+    isErrMsg.value = true;
+    return;
+  }
+
+  // タスクの上書き
+  const newItem = {
+    id: id,
+    content: inputContent.value,
+    limit: inputLimit.value,
+    state: inputState.value,
+    onEdit: false,
+  };
+
+  items.value.splice(id, 1, newItem);
+
+  localStorage.setItem("items", JSON.stringify(items.value));
+}
 </script>
 
 <template>
   <div>
+    <p v-if="isErrMsg">タスク・期限を両方入力してください。</p>
     <table>
       <!-- テーブルヘッダー -->
       <tr>
@@ -19,10 +60,31 @@ const items = JSON.parse(localStorage.getItem("items")) || [];
       <!-- タスク一覧 -->
       <tr v-for="item in items" :key="item.id">
         <td>{{ item.id }}</td>
-        <td>{{ item.content }}</td>
-        <td>{{ item.limit }}</td>
-        <td>{{ item.state.value }}</td>
-        <td><button>編集</button></td>
+        <td>
+          <span v-if="!item.onEdit">{{ item.content }}</span>
+          <input v-else v-model="inputContent" type="text" />
+        </td>
+        <td>
+          <span v-if="!item.onEdit">{{ item.limit }}</span>
+          <input v-else v-model="inputLimit" type="date" />
+        </td>
+        <td>
+          <span v-if="!item.onEdit">{{ item.state.value }}</span>
+          <select v-else v-model="inputState">
+            <option
+              v-for="state in statuses"
+              :key="state.id"
+              :value="state"
+              :selected="state.id == item.state.id"
+            >
+              {{ state.value }}
+            </option>
+          </select>
+        </td>
+        <td>
+          <button v-if="!item.onEdit" @click="onEdit(item.id)">編集</button>
+          <button v-else @click="onUpdate(item.id)">完了</button>
+        </td>
         <td><button>削除</button></td>
       </tr>
     </table>
