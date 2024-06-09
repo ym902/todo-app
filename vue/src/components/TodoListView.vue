@@ -18,7 +18,7 @@ function onEdit(id) {
   items.value[id].onEdit = true;
 };
 
-// 更新
+// タスクの更新
 let isErrMsg = ref(false);
 
 function onUpdate(id) {
@@ -40,6 +40,43 @@ function onUpdate(id) {
   items.value.splice(id, 1, newItem);
 
   localStorage.setItem("items", JSON.stringify(items.value));
+}
+
+// タスクの削除
+// 削除ボタンモーダルの処理
+let isShowModal = ref(false);
+let deleteItemId = '';  // 削除対象のItemのID
+let deleteItemContent = ref(); // 削除対象のItemの内容
+
+function showDeleteModal(id) {
+  isShowModal.value = true;
+  deleteItemId = id;
+  deleteItemContent = items.value[id].content;
+}
+
+// モーダルで「はい」をクリック
+function onDeleteItem(id) {
+  // タスクを削除する処理
+  // 対象はdeleteItemId
+  items.value.splice(deleteItemId, 1);
+
+  // IDを振り直す(削除されたIDがあっても番号を連番になるようにする)
+  items.value = items.value.map((item, index) => ({
+    id: index,
+    content: item.content,
+    limit: item.limit,
+    state: item.state,
+    onEdit: item.onEdit,
+  }));
+
+  localStorage.setItem("items", JSON.stringify(items.value));
+
+  isShowModal.value = false;
+}
+
+// モーダルで「キャンセル」をクリック
+function onHideModal() {
+  isShowModal.value = false;
 }
 </script>
 
@@ -85,8 +122,17 @@ function onUpdate(id) {
           <button v-if="!item.onEdit" @click="onEdit(item.id)">編集</button>
           <button v-else @click="onUpdate(item.id)">完了</button>
         </td>
-        <td><button>削除</button></td>
+        <td><button @click="showDeleteModal(item.id)">削除</button></td>
       </tr>
     </table>
+  </div>
+
+  <!-- 削除ボタンのモーダル -->
+  <div v-if="isShowModal" class="modal">
+    <div class="modal-content">
+      <p>{{deleteItemContent}}を削除してもよろしいですか？</p>
+      <button @click="onDeleteItem()">はい</button>
+      <button @click="onHideModal()">キャンセル</button>
+    </div>
   </div>
 </template>
