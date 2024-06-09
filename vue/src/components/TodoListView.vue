@@ -130,7 +130,7 @@ function onHideModal() {
   <!-- 削除ボタンのモーダル -->
   <div v-if="isShowModal" class="modal">
     <div class="modal-content">
-      <p>{{deleteItemContent}}を削除してもよろしいですか？</p>
+      <p>「{{deleteItemContent}}」を削除してもよろしいですか？</p>
       <button @click="onDeleteItem()">はい</button>
       <button @click="onHideModal()">キャンセル</button>
     </div>
