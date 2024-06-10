@@ -7,13 +7,32 @@ let items = ref(JSON.parse(localStorage.getItem("items")) || []);
 let inputContent = ref();  // タスクの内容
 let inputLimit = ref();  // タスクの期限
 let inputState = ref();  // タスクのステータス
+let errMsg = ref('');  // エラーメッセージ
 
 // 編集ボタンをクリックしたときの処理 onEditの値をtrueにする
 function onEdit(id) {
+  let isOnEditOther = false;
+
+  // 他に編集モードのタスクがないか調べる
+  items.value.map((item => {
+    if (item.onEdit) {
+      // onEditがtrueのタスクがある = 編集中のものがある
+      isOnEditOther = true;
+      return;
+    }
+  }));
+
+  if(isOnEditOther) {
+    // エラーメッセージを表示する
+    errMsg.value = "他に編集中のタスクがあります。";
+    isErrMsg.value = true;
+    return;
+  }
+
   inputContent.value = items.value[id].content;
   inputLimit.value = items.value[id].limit;
   inputState.value = items.value[id].state;
-  
+
   // refで宣言した値にアクセスするために .value が必要
   items.value[id].onEdit = true;
 };
@@ -24,6 +43,7 @@ let isErrMsg = ref(false);
 function onUpdate(id) {
   // エラーメッセージ
   if (inputContent.value == "" || inputLimit.value == "") {
+    errMsg.value = "タスクの内容と期限を入力してください。";
     isErrMsg.value = true;
     return;
   }
@@ -40,6 +60,9 @@ function onUpdate(id) {
   items.value.splice(id, 1, newItem);
 
   localStorage.setItem("items", JSON.stringify(items.value));
+  
+  errMsg.value = '';  // エラーメッセージをクリア
+  isErrMsg.value = false;  // エラー状態をリセット
 }
 
 // タスクの削除
@@ -78,24 +101,41 @@ function onDeleteItem(id) {
 function onHideModal() {
   isShowModal.value = false;
 }
+
+// 期限切れのタスクを赤字にする
+const today = new Date();
+
+// タスクを日付順に並べる
+function sortByLimit() {
+  items.value.sort((a, b) => new Date(a.limit) - new Date(b.limit));
+  localStorage.setItem("items", JSON.stringify(items.value));
+}
+
+// タスクをIDで並べる
+function sortById() {
+  items.value.sort((a, b) => a.id - b.id);
+  localStorage.setItem("items", JSON.stringify(items.value));
+}
 </script>
 
 <template>
   <div>
-    <p v-if="isErrMsg">タスク・期限を両方入力してください。</p>
+    <p v-if="isErrMsg">{{ errMsg }}</p>
     <table>
       <!-- テーブルヘッダー -->
       <tr>
-        <th class="th-id">ID</th>
+        <th class="th-id">ID <button @click="sortById()">↓</button></th>
         <th class="th-value">やること</th>
-        <th class="th-limit">期限</th>
+        <th class="th-limit">期限 <button @click="sortByLimit()">↓</button></th>
         <th class="th-status">状態</th>
         <th class="th-edit">編集</th>
         <th class="th-delete">削除</th>
       </tr>
 
       <!-- タスク一覧 -->
-      <tr v-for="item in items" :key="item.id">
+      <tr v-for="item in items"
+        :key="item.id"
+        :class="{ red: new Date(item.limit) < today }">
         <td>{{ item.id }}</td>
         <td>
           <span v-if="!item.onEdit">{{ item.content }}</span>

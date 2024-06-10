@@ -56,3 +56,7 @@ a,
 .modal-content button:nth-child(2) {
   margin-right: 5px;
 }
+
+.red {
+  color: red;
+}
