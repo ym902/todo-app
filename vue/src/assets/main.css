@@ -7,34 +7,42 @@
   font-weight: normal;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
 @media (min-width: 1024px) {
   body {
     display: flex;
     place-items: center;
   }
+}
 
-  /* #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  } */
+/* TodoApp.vue */
+.todoApp {
+  width:600px;
+}
+
+/* TodoInput.vue */
+h1 {
+  margin-bottom: 30px;
+}
+
+.task-input {
+  width: 100%;
+  border: 2px solid #9AC1F0;
+  padding: 3px;
+  border-radius: 3px;
+  margin-bottom: 3px;
+}
+
+.task-submit-btn {
+  padding: 3px 20px;
+  margin: 15px 0 35px 0;
+  background: #9AC1F0;
+  border-radius: 10px;
+  border: none;
+  color: #fff;
 }
 
 /* TodoListView.vue */
+/* モーダル */
 .modal {
   position: fixed;
   top: 0;
@@ -53,10 +61,75 @@ a,
   border-radius: 8px;
 }
 
-.modal-content button:nth-child(2) {
-  margin-right: 5px;
+.modal-btn button:nth-child(1) {
+  margin-right: 10px;
 }
 
+.modal-btn {
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* エラー文、期限切れタスク */
 .red {
   color: red;
+}
+
+.err-space {
+  height: 24px;
+}
+
+/* タスク一覧 (テーブル) */
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.task-table tr td button {
+  background: #9AC1F0;
+  border-radius: 10px;
+  border: none;
+  color: #fff;
+  padding: 2px 10px;
+}
+
+th {
+  position: relative;
+  padding-bottom: 5px;
+}
+
+th::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0; /* 下に配置 */
+  border-bottom: 2px solid #9AC1F0;
+  width: calc(100% - 2px); /* 2px短くする */
+  margin: 0 1px;
+}
+
+.th-id {
+  width: 80px;
+}
+
+.th-value {
+  width: 180px;
+}
+
+.th-limit {
+  width: 140px;
+}
+
+.th-status {
+  width: 90px;
+}
+
+.input-content, .input-limit, .select-state {
+  width: 100%;
+}
+
+td {
+  padding: 3px;
 }

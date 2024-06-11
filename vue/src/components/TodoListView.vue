@@ -120,59 +120,65 @@ function sortById() {
 
 <template>
   <div>
-    <p v-if="isErrMsg">{{ errMsg }}</p>
-    <table>
-      <!-- テーブルヘッダー -->
-      <tr>
-        <th class="th-id">ID <button @click="sortById()">↓</button></th>
-        <th class="th-value">やること</th>
-        <th class="th-limit">期限 <button @click="sortByLimit()">↓</button></th>
-        <th class="th-status">状態</th>
-        <th class="th-edit">編集</th>
-        <th class="th-delete">削除</th>
-      </tr>
+    <div>
+      <div class="err-space">
+        <p class="red" v-if="isErrMsg">{{ errMsg }}</p>
+      </div>
+      <table class="task-table">
+        <!-- テーブルヘッダー -->
+        <tr>
+          <th class="th-id">ID <button @click="sortById()">↓</button></th>
+          <th class="th-value">やること</th>
+          <th class="th-limit">期限 <button @click="sortByLimit()">↓</button></th>
+          <th class="th-status">状態</th>
+          <th class="th-edit">編集</th>
+          <th class="th-delete">削除</th>
+        </tr>
 
-      <!-- タスク一覧 -->
-      <tr v-for="item in items"
-        :key="item.id"
-        :class="{ red: new Date(item.limit) < today }">
-        <td>{{ item.id }}</td>
-        <td>
-          <span v-if="!item.onEdit">{{ item.content }}</span>
-          <input v-else v-model="inputContent" type="text" />
-        </td>
-        <td>
-          <span v-if="!item.onEdit">{{ item.limit }}</span>
-          <input v-else v-model="inputLimit" type="date" />
-        </td>
-        <td>
-          <span v-if="!item.onEdit">{{ item.state.value }}</span>
-          <select v-else v-model="inputState">
-            <option
-              v-for="state in statuses"
-              :key="state.id"
-              :value="state"
-              :selected="state.id == item.state.id"
-            >
-              {{ state.value }}
-            </option>
-          </select>
-        </td>
-        <td>
-          <button v-if="!item.onEdit" @click="onEdit(item.id)">編集</button>
-          <button v-else @click="onUpdate(item.id)">完了</button>
-        </td>
-        <td><button @click="showDeleteModal(item.id)">削除</button></td>
-      </tr>
-    </table>
-  </div>
+        <!-- タスク一覧 -->
+        <tr v-for="item in items"
+          :key="item.id"
+          :class="{ red: new Date(item.limit) < today }">
+          <td>{{ item.id }}</td>
+          <td>
+            <span v-if="!item.onEdit">{{ item.content }}</span>
+            <input v-else v-model="inputContent" type="text" class="input-content" />
+          </td>
+          <td>
+            <span v-if="!item.onEdit">{{ item.limit }}</span>
+            <input v-else v-model="inputLimit" type="date" class="input-limit" />
+          </td>
+          <td>
+            <span v-if="!item.onEdit">{{ item.state.value }}</span>
+            <select v-else v-model="inputState" class="select-state">
+              <option
+                v-for="state in statuses"
+                :key="state.id"
+                :value="state"
+                :selected="state.id == item.state.id"
+              >
+                {{ state.value }}
+              </option>
+            </select>
+          </td>
+          <td>
+            <button v-if="!item.onEdit" @click="onEdit(item.id)">編集</button>
+            <button v-else @click="onUpdate(item.id)">完了</button>
+          </td>
+          <td><button @click="showDeleteModal(item.id)">削除</button></td>
+        </tr>
+      </table>
+    </div>
 
   <!-- 削除ボタンのモーダル -->
-  <div v-if="isShowModal" class="modal">
-    <div class="modal-content">
-      <p>「{{deleteItemContent}}」を削除してもよろしいですか？</p>
-      <button @click="onDeleteItem()">はい</button>
-      <button @click="onHideModal()">キャンセル</button>
+    <div v-if="isShowModal" class="modal">
+      <div class="modal-content">
+        <p>「{{deleteItemContent}}」を削除してもよろしいですか？</p>
+        <div class="modal-btn">
+          <button @click="onDeleteItem()">はい</button>
+          <button @click="onHideModal()">キャンセル</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
