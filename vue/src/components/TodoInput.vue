@@ -40,11 +40,14 @@ function onSubmitForm(event) {
 
 <template>
   <div>
-    <p v-if="isErrMsg">タスク・期限を両方入力してください。</p>
+    <h1>TODOリスト</h1>
+    <div class="err-space">
+      <p class="red" v-if="isErrMsg">タスク・期限を両方入力してください。</p>
+    </div>
     <form @submit="onSubmitForm">
-      <label>やること<input type="text" v-model="input" /></label>
-      <label>期限<input type="date" v-model="inputDate" /></label>
-      <input type="submit" value="登録" />
+      <label>やること<br><input class="task-input" type="text" v-model="input" /></label><br>
+      <label>期限<br><input class="task-input" type="date" v-model="inputDate" /></label><br>
+      <input class="task-submit-btn" type="submit" value="登録" />
     </form>
   </div>
 </template>
